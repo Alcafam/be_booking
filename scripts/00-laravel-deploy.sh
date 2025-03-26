@@ -24,7 +24,7 @@ php artisan migrate --path=/database/migrations/2025_03_21_195706_create_events_
 php artisan migrate --path=/database/migrations/2025_03_21_195726_create_bookings_table.php --force
 
 echo "Running seeders..."
-php artisan db:seed
+php artisan db:seed --force
 
 # Check if the seed command was successful
 if [ $? -eq 0 ]; then
