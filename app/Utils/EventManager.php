@@ -48,14 +48,20 @@ class EventManager
             $eventsWithStatus = $events->getCollection()->map(function ($event) use ($user) {
                 // Check if the event is almost full (80% or more booked)
                 $totalBookings = Booking::where('event_id', $event->id)->count();
-                $eventCapacity = $event->total_capacity;
                 
-                if ($eventCapacity > 0) {
-                    $percentageBooked = ($totalBookings / $eventCapacity) * 100;
-                    $event->almost_full = $percentageBooked >= 80;
-                } else {
-                    $event->almost_full = false; // If no capacity is set, assume it's not almost full
+                if($event->total_capacity > 10){
+                    if ($event->total_capacity > 0) {
+                        $percentageBooked = ($totalBookings / $event->total_capacity) * 100;
+                        $event->almost_full = $percentageBooked >= 80;
+                    } else {
+                        $event->almost_full = false;
+                    }
+                }else{
+                // Check if the event is less than 10 in capacity
+                    $remaining = $event->total_capacity - $totalBookings;
+                    $event->almost_full = $remaining <= 2;
                 }
+
                 $event->total_bookings = $totalBookings;
                 return $event;
             });
