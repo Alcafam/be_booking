@@ -24,15 +24,15 @@ class EventManager
             //format time to 12-hours
             $event->event_time = Carbon::parse($event->event_time)->format('g:i A'); // 12-hour format
             $totalBookings = Booking::where('event_id', $event->id)->count();
-            if($totalBookings >= $event->total_capacity){
+            if ($totalBookings >= $event->total_capacity) {
                 $event->full_capacity = true;
-            }else{
+            } else {
                 $event->full_capacity = false;
             }
             return $event;
         });
 
-        if($user->user_type=='user'){
+        if ($user->user_type=='user') {
             $eventsWithStatus = $events->getCollection()->map(function ($event) use ($user) {
                 $totalBookings = Booking::where('event_id', $event->id)->count();
                 // Check if the user has booked this event
@@ -44,7 +44,7 @@ class EventManager
                 return $event;
             });
             $events->setCollection($eventsWithStatus);
-        }else{
+        } else {
             $eventsWithStatus = $events->getCollection()->map(function ($event) use ($user) {
                 // Check if the event is almost full (80% or more booked)
                 $totalBookings = Booking::where('event_id', $event->id)->count();
@@ -56,7 +56,7 @@ class EventManager
                     } else {
                         $event->almost_full = false;
                     }
-                }else{
+                } else {
                 // Check if the event is less than 10 in capacity
                     $remaining = $event->total_capacity - $totalBookings;
                     $event->almost_full = $remaining <= 2;
@@ -67,36 +67,35 @@ class EventManager
             });
             $events->setCollection($eventsWithStatus);
         }
-
         return $events;
     }
 
     public static function get_event_by_id($request)
     {
         if (is_object($request) && method_exists($request, 'user')) {
-            $user = $request->user() ?? $request->user; //for api
+            $user = $request->user() ?? $request->user; 
         }
 
         $event = Event::select('events.*', DB::raw('(events.total_capacity - COUNT(bookings.id)) as remaining_slot'))
             ->leftJoin('bookings', 'bookings.event_id', '=', 'events.id')
-            ->where('events.id', $request->id)  // Corrected syntax here
+            ->where('events.id', $request->id)  
             ->groupBy('events.id', 'events.total_capacity')
             ->first();
         
         $event->event_time = Carbon::parse($event->event_time)->format('g:i A');
         $totalBookings = Booking::where('event_id', $event->id)->count();
-        if($totalBookings >= $event->total_capacity){
+        if ($totalBookings >= $event->total_capacity) {
             $event->full_capacity = true;
-        }else{
+        } else {
             $event->full_capacity = false;
         }
 
-        if($user->user_type=='user'){
+        if ($user->user_type=='user') {
                 $booked = Booking::where('user_id', $user->id)
                                  ->where('event_id', $event->id)
                                  ->exists();
                 $event->booked = $booked;
-        }else{
+        } else {
             // Check if the event is almost full (80% or more booked)
             $totalBookings = Booking::where('event_id', $event->id)->count();
             $eventCapacity = $event->total_capacity;
@@ -105,18 +104,16 @@ class EventManager
                 $percentageBooked = ($totalBookings / $eventCapacity) * 100;
                 $event->almost_full = $percentageBooked >= 80;
             } else {
-                $event->almost_full = false; // If no capacity is set, assume it's not almost full
+                $event->almost_full = false;
             }
             $event->total_bookings = $totalBookings;
             return $event;
         }
-
         return $event;
     }
 
-    public static function count_bookings($id){
+    public static function count_bookings($id) {
         $event = Event::find($id);
-            // Count how many bookings are associated with this event
         $bookingCount = $event->bookings()->count();
         return $bookingCount;
     }

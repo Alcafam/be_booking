@@ -14,25 +14,24 @@ class EventController extends Controller
     public function event_list(Request $request): JsonResponse
     {
         $events = EventManager::get_all_events($request, 10, $request->page);
-        return response()->json($events, 200);
+        return response()->json($events);
     }
 
     public function event_by_id(Request $request, $id): JsonResponse
     {
         $events = EventManager::get_event_by_id($request);
-        return response()->json($events, 200);
+        return response()->json($events);
     }
 
     public function add_event(Request $request): JsonResponse
     {
         $validator = $this->event_validator($request);
         if($validator!==true){
-            return response()->json($validator);
+            return response()->json([$validator],422);
         }
 
         $event = Event::create($request->all());
         return response()->json([
-            'code' => 201,
             'success' => true,
             'message' => 'New Event Added'
         ]);
@@ -42,13 +41,12 @@ class EventController extends Controller
     {
         $validator = $this->event_validator($request);
         if($validator!==true){
-            return response()->json($validator);
+            return response()->json([$validator],422);
         }
 
         $event = Event::findOrFail($id);
         $event->update($request->all());
         return response()->json([
-            'code' => 200,
             'success' => true,
             'message' => 'Event Updated'
         ]);
@@ -71,7 +69,6 @@ class EventController extends Controller
         $event->delete();
         
         return response()->json([
-            'code' => 200,
             'success' => true,
             'message' => 'Event Deleted'
         ]);
@@ -90,7 +87,6 @@ class EventController extends Controller
 
         if ($validator->fails()) {
             return [
-                'code' => 422,
                 'success' => false,
                 'message' => 'Validation errors',
                 'errors' => $validator->errors()

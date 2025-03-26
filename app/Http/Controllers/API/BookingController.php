@@ -25,10 +25,9 @@ class BookingController extends Controller
         $event = Event::find($id);
         if (!$event) {
             return response()->json([
-                'code' => 404,
                 'success' => false,
                 'error' => 'Event not found.'
-            ]);
+            ],404);
         }
 
         $existingBooking = Booking::where('user_id', $user->id)
@@ -37,20 +36,18 @@ class BookingController extends Controller
 
         if ($existingBooking) {
             return response()->json([
-                'code' => 400,
                 'success' => false,
                 'error' => 'You have already booked this event.'
-            ]);
+            ],400);
         }
 
         // Check if there is available capacity.
         $currentBookingCount = $event->bookings()->count();
         if ($currentBookingCount >= $event->total_capacity) {
             return response()->json([
-                'code' => 400,
                 'success' => false,
                 'error' => 'Event is fully booked.'
-            ]);
+            ],400);
         }
 
         $booking = Booking::create([
@@ -59,7 +56,6 @@ class BookingController extends Controller
         ]);
 
         return response()->json([
-            'code' => 201,
             'success' => true,
             'message' => 'Successfully booked an Event.'
         ]);
@@ -74,16 +70,14 @@ class BookingController extends Controller
         if($booking){
             $booking->delete();
             return response()->json([
-                'code' => 200,
                 'success' => true,
                 'message' => 'Booking Canceled'
             ]);
         }else{
             return response()->json([
-                'code' => 400,
                 'success' => false,
                 'error' => 'You have not booked this event.'
-            ]);
+            ],400);
         }
         
     }

@@ -40,7 +40,6 @@ class AuthController extends Controller
 
         $token = $this->authToken($user);
         return response()->json([
-            'code' => 201,
             'success' => true,
             'message' => 'User registered successfully',
             'user' => $user,
@@ -58,18 +57,16 @@ class AuthController extends Controller
 
         if ($validator->fails()) {
             return response()->json([
-                'code' => 422,
                 'success' => false,
                 'message' => 'Validation errors',
                 'errors' => $validator->errors()
-            ]);
+            ],422);
         }
 
         if (Auth::attempt(['email' => $request->email, 'password' => $request->password])) {
             $user = Auth::user();
             $token = $this->authToken($user);
             return response()->json([
-                'code' => 200,
                 'success' => true,
                 'message' => 'Login successful',
                 'user' => Auth::user(),
@@ -78,10 +75,9 @@ class AuthController extends Controller
         }
 
         return response()->json([
-            'code' => 401,
             'success' => false,
             'message' => 'Invalid credentials'
-        ]);
+        ],401);
     }
 
 /* LOGOUT */
@@ -92,7 +88,6 @@ class AuthController extends Controller
         });
         
         return response()->json([
-            'code' => 200,
             'success' => true,
             'message' => 'Logged out successfully'
         ]);
