@@ -13,10 +13,17 @@ echo "Caching routes..."
 php artisan route:cache
 
 echo "Running migration reset"
-php artisan migrate:fresh
+php artisan migrate:reset
 
-# echo "Running migrations..."
-# php artisan migrate --force
+echo "Running migrations..."
+php artisan migrate --force
 
 echo "Running seeders..."
 php artisan db:seed
+
+# Check if the seed command was successful
+if [ $? -eq 0 ]; then
+    echo "Seeders ran successfully."
+else
+    echo "There was an error running the seeders."
+fi
