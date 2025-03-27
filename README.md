@@ -3,6 +3,9 @@
 This project is a Laravel 10 application designed to handle event bookings.
 **Deployed @ Render**
 
+### Api Testing Postman Workspace
+https://app.getpostman.com/join-team?invite_code=d874e88cdd5ae159ffff271a1f44e43d6bb2cb1170660e91a318720e0c28dbfe&target_code=701bf6da2095c0f89f024395e6e0e98c
+
 ## Setup Instructions
 
 Follow these steps to set up the project on your local machine:
