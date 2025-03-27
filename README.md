@@ -1,6 +1,7 @@
 # Event Booking: https://fe-booking-eight.vercel.app/
 
 This project is a Laravel 10 application designed to handle event bookings.
+**Deployed @ Render**
 
 ## Setup Instructions
 
