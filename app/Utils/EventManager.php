@@ -82,7 +82,6 @@ class EventManager
             ->groupBy('events.id', 'events.total_capacity')
             ->first();
         
-        $event->event_time = Carbon::parse($event->event_time)->format('g:i A');
         $totalBookings = Booking::where('event_id', $event->id)->count();
         if ($totalBookings >= $event->total_capacity) {
             $event->full_capacity = true;
