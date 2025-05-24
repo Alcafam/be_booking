@@ -60,15 +60,6 @@ Follow these steps to set up the project on your local machine:
    Visit `http://127.0.0.1:8000` in your browser to view the project.
 ---
 
-## Brief Explanation of Approach
-
-1. **Make It Work First, Then Refactor**:  
-   The primary goal during the development was to make the core features functional as quickly as possible. This included implementing event booking, basic authentication, and necessary database interactions. Once the core features were confirmed to be working, refactoring and optimization were done to ensure maintainability and improve performance.
-
-2. Some of the best practices used in this project come from previous roles and experiences with Laravel development
-
----
-
 ## Notes on Incomplete or Additional Features
 
 1. Email Confirmation After Booking  
